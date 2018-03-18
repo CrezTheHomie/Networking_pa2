@@ -132,19 +132,30 @@ public class sender {
                 }
                 else{
                     //Send old packet
-                    System.out.println("Waiting ACK"
-                            + messages[ID-1].charAt(sequenceNOPos)
-                            + ", " + packetsSent
-                            + ", ACK" + reply
-                            + ", resend Packet"
-                            + messages[ID-1].charAt(sequenceNOPos));
+                    if(reply == 2){
+                        System.out.println("Waiting ACK"
+                                + messages[ID-1].charAt(sequenceNOPos)
+                                + ", " + packetsSent
+                                + ", DROP"
+                                + ", resend Packet"
+                                + messages[ID-1].charAt(sequenceNOPos));
+                    }
+                    else{
+                        System.out.println("Waiting ACK"
+                                + messages[ID-1].charAt(sequenceNOPos)
+                                + ", " + packetsSent
+                                + ", ACK" + reply
+                                + ", resend Packet"
+                                + messages[ID-1].charAt(sequenceNOPos));
+                    }
+
                 }
             }
             br.close();
             in.close();
             out.close();
             clientSocket.close();
-            Thread.sleep(3000);
+            //Thread.sleep(1000);
             //System.out.println("exit");
 
         } catch (UnknownHostException e) {

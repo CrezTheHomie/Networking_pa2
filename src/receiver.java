@@ -105,7 +105,7 @@ public class receiver {
             in.close();
             out.close();
             clientSocket.close();
-            Thread.sleep(3000);
+            //Thread.sleep(1000);
         } catch (UnknownHostException e) {
             System.err.println("Don't know about host " + hostName);
             System.exit(1);
