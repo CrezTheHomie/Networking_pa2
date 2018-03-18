@@ -195,14 +195,6 @@ class clientThread extends Thread {
 
                 }
             }
-			/*
-			* Close the output stream, close the input stream, close the
-			* socket.
-			*/
-            //System.out.println("We must be closing since a -1 was found");
-
-            //System.out.println("I'm not listening to you~");
-
 
         } catch (IOException e) {
             network.listening = false;
