@@ -43,12 +43,6 @@ public class sender {
         int portNumber = Integer.parseInt(args[1]);
         String fileName = args[2];
 
-        System.out.println("------------------------");
-        System.out.println(hostName);
-        System.out.println(portNumber);
-        System.out.println(fileName);
-        System.out.println("------------------------");
-
         BufferedReader br = new BufferedReader(new FileReader(fileName));
 
         byte ID = 1;
@@ -57,7 +51,7 @@ public class sender {
         String packetContent;
         String[] messages = new String[text.trim().split("\\s+").length];
         String[] words = new String[text.trim().split("\\s+").length];
-        int checkSum = 0; int packetsSent = 0; int packetsSentSuccessfully = 0;
+        int checkSum; int packetsSent = 0; int packetsSentSuccessfully = 0;
         byte reply;
 
         //Thread.sleep(4000);
@@ -66,9 +60,9 @@ public class sender {
             packetContent = s.next();
             checkSum = 0;
             byte[] checkSumCalc = packetContent.getBytes();
-            for (int i = 0; i < checkSumCalc.length; i++){
-                checkSum += checkSumCalc[i];
-                if(checkSum > 9999){
+            for (byte aCheckSumCalc : checkSumCalc) {
+                checkSum += aCheckSumCalc;
+                if (checkSum > 9999) {
                     checkSum /= 100;
                 }
             }
@@ -76,9 +70,6 @@ public class sender {
             words[ID-1] = packetContent;
 
             ID++;
-        }
-        for (String str:messages) {
-            System.out.println(str);
         }
 
         try (
@@ -97,22 +88,22 @@ public class sender {
                 out.writeByte(ID);
                 checkSum = 0;
                 byte[] checkSumCalc = words[ID-1].getBytes();
-                for (int i = 0; i < checkSumCalc.length; i++){
-                    checkSum += checkSumCalc[i];
-                    if(checkSum > 9999){
+                for (byte aCheckSumCalc : checkSumCalc) {
+                    checkSum += aCheckSumCalc;
+                    if (checkSum > 9999) {
                         checkSum /= 100;
                     }
                 }
                 out.writeInt(checkSum);
                 out.writeUTF(words[ID-1]);
                 out.flush();
-                System.out.println("------------------------");
-                System.out.println("Sending packet:" + sequenceNo+ID+checkSum+words[ID-1]);
-                System.out.println("------------------------");
+                //System.out.println("------------------------");
+                //System.out.println("Sending packet:" + sequenceNo+ID+checkSum+words[ID-1]);
+                //System.out.println("------------------------");
                 //Thread.sleep(1000);
 
                 reply = in.readByte();
-                System.out.println("Reply: ACK" + reply);
+                //System.out.println("Reply: ACK" + reply);
                 //If ACK and corresponding ACKs i.e. ACK0 and ACK0
                 //messages[ID-1].charAt(0) == ACK#
                 if(reply == sequenceNo){
@@ -154,7 +145,7 @@ public class sender {
             out.close();
             clientSocket.close();
             Thread.sleep(3000);
-            System.out.println("exit");
+            //System.out.println("exit");
 
         } catch (UnknownHostException e) {
             System.err.println("Don't know about host " + hostName);

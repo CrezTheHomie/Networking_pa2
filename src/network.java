@@ -25,7 +25,7 @@ public class network {
         Random ran = new Random();
         double x = ThreadLocalRandom.current().nextDouble(0, 1);
         //System.out.println("x: " + x);
-        int operation = 0;
+        int operation;
         if(x <= .5){
             operation = pass;
         }
@@ -54,9 +54,9 @@ public class network {
                 try {
                     Socket clientSocket = serverSocket.accept();
                     if (threads[i] == null && i < 2) {
-                        System.out.println("------------------------");
-                        System.out.println("New Client Thread Started");
-                        System.out.println("------------------------");
+                        //System.out.println("------------------------");
+                        //System.out.println("New Client Thread Started");
+                        //System.out.println("------------------------");
                         (threads[i] = new clientThread(clientSocket, threads)).start();
                         i++; clientCount++;
                     }
@@ -75,7 +75,7 @@ public class network {
             serverSocket.close();
 
         } catch (IOException e) {
-            System.err.println("Could not listen on port " + portNumber);
+            //System.err.println("Could not listen on port " + portNumber);
             System.exit(-1);
         }
 
@@ -199,15 +199,15 @@ class clientThread extends Thread {
 			* Close the output stream, close the input stream, close the
 			* socket.
 			*/
-            System.out.println("We must be closing since a -1 was found");
+            //System.out.println("We must be closing since a -1 was found");
 
-            System.out.println("I'm not listening to you~");
+            //System.out.println("I'm not listening to you~");
 
 
         } catch (IOException e) {
             network.listening = false;
-            System.out.println("IO Exception in client(s)");
-            System.exit(-1);
+            //System.out.println("IO Exception in client(s)");
+            System.exit(0);
         }
     }
 }

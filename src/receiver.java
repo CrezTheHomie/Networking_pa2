@@ -25,10 +25,10 @@ public class receiver {
         try (
                 Socket clientSocket = new Socket(hostName, portNumber);
                 DataOutputStream out = new DataOutputStream(new BufferedOutputStream(clientSocket.getOutputStream()));
-                DataInputStream in = new DataInputStream(new BufferedInputStream(clientSocket.getInputStream()));
+                DataInputStream in = new DataInputStream(new BufferedInputStream(clientSocket.getInputStream()))
         ) {
-            byte sequenceNo = 33;
-            byte ID = 1;
+            byte sequenceNo;
+            byte ID;
             int calcdCheckSum; int packetCheckSum;
             String packetContents;
 
@@ -37,25 +37,25 @@ public class receiver {
             while (listening) {
                 numPacketsReceived++;
                 sequenceNo = in.readByte();
-                System.out.println("\n##############################\nSequenceNo: " + sequenceNo);
+                //System.out.println("\n##############################\nSequenceNo: " + sequenceNo);
                 if (sequenceNo == -1){
                     in.close();
                     out.close();
                     break;
                 }
                 ID = in.readByte();
-                System.out.println("ID: " + ID);
+                //System.out.println("ID: " + ID);
                 packetCheckSum = in.readInt();
-                System.out.println("checkSum: " + packetCheckSum);
+                //System.out.println("checkSum: " + packetCheckSum);
                 packetContents = in.readUTF();
-                System.out.println("packetContents: " + packetContents);
+                //System.out.println("packetContents: " + packetContents);
 
                 calcdCheckSum = 0;
                 byte[] checkSumCalc = packetContents.getBytes();
 
-                for (int i = 0; i < checkSumCalc.length; i++){
-                    calcdCheckSum += checkSumCalc[i];
-                    if(calcdCheckSum > 9999){
+                for (byte aCheckSumCalc : checkSumCalc) {
+                    calcdCheckSum += aCheckSumCalc;
+                    if (calcdCheckSum > 9999) {
                         calcdCheckSum /= 10;
                     }
                 }
@@ -64,14 +64,16 @@ public class receiver {
                         && currentID == ID
                         && ACK == sequenceNo){
                     //packet PASS
-                    System.out.println("\nPACKET PASS\n");
+                    //System.out.println("\nPACKET PASS\n");
                     System.out.println("Waiting " + ACK
                             + ", " + numPacketsReceived
                             + ", " + packetContents
-                            + ", ACK" + ACK + "\n");
+                            + ", ACK" + ACK);
 
                     message += packetContents + " ";
-                    System.out.println("Currently read message: " + message);
+                    if(packetContents.contains(".")){
+                        System.out.println("Message: " + message);
+                    }
                     out.writeByte(ACK);
                     out.flush();
                     currentID++;
@@ -79,7 +81,7 @@ public class receiver {
                 }
                 else{
                     //packet CORRUPT
-                    System.out.println("\nPACKET CORRUPT\n");
+                    /*System.out.println("\nPACKET CORRUPT\n");
                     if(packetCheckSum != calcdCheckSum){
                         System.out.println("Checksum was messedup");
                     }
@@ -88,7 +90,7 @@ public class receiver {
                     }
                     if(ACK != sequenceNo){
                         System.out.println("sequenceNo was messedup");
-                    }
+                    }*/
                     out.writeByte((ACK + 1) % 2);
                     out.flush();
 
@@ -99,7 +101,7 @@ public class receiver {
                 }
 
             }
-            System.out.println("exit");
+            //System.out.println("exit");
             in.close();
             out.close();
             clientSocket.close();
